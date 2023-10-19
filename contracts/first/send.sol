@@ -10,26 +10,30 @@ contract Send is Base {
     // contract that will reject!
     address payable _to_reject;
 
-    constructor(address to_address) {}
+    constructor(
+        address payable to_forward_address,
+        address payable to_reject_address
+    ) {
+        _to_forward = to_forward_address;
+        _to_reject = to_reject_address;
+    }
 
     event SendEther(uint amount, address to, bool status);
 
     receive() external payable {}
 
-    fallback() external payable {}
+    fallback() external payable {
+        bool sent = _to_reject.send(msg.value);
+        emit SendEther(msg.value, _to_reject, sent);
+    }
 
-    function sendEtherToRejection(
-        uint amount_to_send,
-        bool to_reject
-    ) external payable {
+    function sendEtherToRejection(uint amount_to_send) external payable {
         require(
             address(this).balance >= amount_to_send,
             "insufficient balance!"
         );
 
-        address payable addr = (to_reject) ? _to_reject : _to_forward;
-
-        bool sent = addr.send(amount_to_send);
-        emit SendEther(amount_to_send, _to_reject, sent);
+        bool sent = _to_forward.send(amount_to_send);
+        emit SendEther(amount_to_send, _to_forward, sent);
     }
 }

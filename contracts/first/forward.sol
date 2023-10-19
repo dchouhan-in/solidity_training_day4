@@ -6,14 +6,16 @@ import {Base} from "./base.sol";
 contract Forward is Base {
     address payable _to_receive;
 
-    constructor(address to_address) {}
+    constructor(address payable to_address) {
+        _to_receive = to_address;
+    }
 
-    event SendEther(uint amount, address to, bool status);
-
+    event ForwardEther(uint amount, address to, bool status);
     event Received(address from, uint amount);
 
     receive() external payable {
         emit Received(msg.sender, msg.value);
-        _to_receive.transfer(msg.value);
+        bool sent = _to_receive.send(msg.value);
+        emit ForwardEther(msg.value, _to_receive, sent);
     }
 }
