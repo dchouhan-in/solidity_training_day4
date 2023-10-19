@@ -2,8 +2,6 @@
 pragma solidity ^0.8.19;
 
 contract ERC20Token {
-    constructor() {}
-
     string _name = "DIVYANSHU COIN";
     string _symbol = "DIV";
     uint96 _totalSupply = 10000 * _decimals;
@@ -20,6 +18,16 @@ contract ERC20Token {
         address indexed _spender,
         uint256 _value
     );
+
+    constructor() {
+        _mint(msg.sender, _totalSupply);
+    }
+
+    function _mint(address _to, uint96 _value) private {
+        require(_totalSupply >= _value, "insufficient supply!");
+        _balanceOf[_to] += _value;
+        _totalSupply -= _value;
+    }
 
     function name() public view returns (string memory) {
         return _name;
@@ -62,7 +70,7 @@ contract ERC20Token {
             msg.sender == _from,
             "sender address and from address must match!"
         );
-        require(_value <= _allowance[_from][_to], "insufficient balance");
+        require(_value <= _allowance[_from][_to], "insufficient approval");
         _allowance[_from][_to] -= _value;
         _balanceOf[_from] -= _value;
         _balanceOf[_to] += _value;
