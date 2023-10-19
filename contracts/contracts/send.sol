@@ -5,34 +5,29 @@ import {Base} from "./base.sol";
 
 contract Send is Base {
     // contract that will forward
-    address payable _to_forward;
+    address payable private toForward;
 
     // contract that will reject!
-    address payable _to_reject;
+    address payable private toReject;
 
-    constructor(
-        address payable to_forward_address,
-        address payable to_reject_address
-    ) {
-        _to_forward = to_forward_address;
-        _to_reject = to_reject_address;
+    constructor(address payable _toForward, address payable _toReject) {
+        toForward = _toForward;
+        toReject = _toReject;
     }
 
-    event SendEther(uint amount, address to, bool status);
+    event EtherSent(uint amount, address indexed to);
 
     receive() external payable {}
 
     fallback() external payable {
-        (bool sent, ) = _to_reject.call{value: msg.value}("");
+        (bool sent, ) = toReject.call{value: msg.value}("");
         require(sent, "Failed to send Ether");
-        emit SendEther(msg.value, _to_reject, true);
+        emit EtherSent(msg.value, toReject);
     }
 
-    function sendEther(uint amount_to_send) external payable {
-
-        // _to_forward.transfer(amount_to_send);
-        (bool sent, ) = _to_forward.call{value: amount_to_send}("");
+    function sendEther(uint amountToSend) external payable {
+        (bool sent, ) = toForward.call{value: amountToSend}("");
         require(sent, "Failed to send Ether");
-        emit SendEther(amount_to_send, _to_forward, true);
+        emit EtherSent(amountToSend, toForward);
     }
 }

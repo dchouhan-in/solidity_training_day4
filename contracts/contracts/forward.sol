@@ -4,10 +4,10 @@ pragma solidity ^0.8.19;
 import {Base} from "./base.sol";
 
 contract Forward is Base {
-    address payable _to_receive;
+    address payable toReceive;
 
-    constructor(address payable to_address) {
-        _to_receive = to_address;
+    constructor(address payable _toReceive) {
+        toReceive = _toReceive;
     }
 
     event ForwardEther(uint amount, address to, bool status);
@@ -15,7 +15,7 @@ contract Forward is Base {
 
     receive() external payable {
         emit Received(msg.sender, msg.value);
-        _to_receive.transfer(msg.value);
-        emit ForwardEther(msg.value, _to_receive, true);
+        toReceive.transfer(msg.value);
+        emit ForwardEther(msg.value, toReceive, true);
     }
 }
