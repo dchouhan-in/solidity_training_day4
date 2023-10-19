@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import {Base} from "./base.sol";
 
 contract Forward is Base {
-    address payable toReceive;
+    address payable private toReceive;
 
     constructor(address payable _toReceive) {
         toReceive = _toReceive;
