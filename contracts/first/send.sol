@@ -23,17 +23,16 @@ contract Send is Base {
     receive() external payable {}
 
     fallback() external payable {
-        bool sent = _to_reject.send(msg.value);
-        emit SendEther(msg.value, _to_reject, sent);
+        (bool sent, ) = _to_reject.call{value: msg.value}("");
+        require(sent, "Failed to send Ether");
+        emit SendEther(msg.value, _to_reject, true);
     }
 
-    function sendEtherToRejection(uint amount_to_send) external payable {
-        require(
-            address(this).balance >= amount_to_send,
-            "insufficient balance!"
-        );
+    function sendEther(uint amount_to_send) external payable {
 
-        bool sent = _to_forward.send(amount_to_send);
-        emit SendEther(amount_to_send, _to_forward, sent);
+        // _to_forward.transfer(amount_to_send);
+        (bool sent, ) = _to_forward.call{value: amount_to_send}("");
+        require(sent, "Failed to send Ether");
+        emit SendEther(amount_to_send, _to_forward, true);
     }
 }

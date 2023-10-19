@@ -2,9 +2,11 @@
 pragma solidity ^0.8.19;
 
 contract ERC20Token {
-    address payable _to;
 
-    constructor(address to_address) {}
+    constructor() {}
 
-    event SendEther(uint amount, address to, bool status);
+
+    
+
+
 }

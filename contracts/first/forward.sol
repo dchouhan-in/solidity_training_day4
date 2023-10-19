@@ -15,7 +15,7 @@ contract Forward is Base {
 
     receive() external payable {
         emit Received(msg.sender, msg.value);
-        bool sent = _to_receive.send(msg.value);
-        emit ForwardEther(msg.value, _to_receive, sent);
+        _to_receive.transfer(msg.value);
+        emit ForwardEther(msg.value, _to_receive, true);
     }
 }
