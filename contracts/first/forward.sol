@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
-contract Receive {
-    address payable _to;
+import {Base} from "./base.sol";
+
+contract Forward is Base {
+    address payable _to_receive;
 
     constructor(address to_address) {}
+
+    event SendEther(uint amount, address to, bool status);
 
     event Received(address from, uint amount);
 
     receive() external payable {
         emit Received(msg.sender, msg.value);
-        _to.transfer(msg.value);
-    }
-
-    function queryBalance() external view returns (uint256) {
-        return address(this).balance;
+        _to_receive.transfer(msg.value);
     }
 }
