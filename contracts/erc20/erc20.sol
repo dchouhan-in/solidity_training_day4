@@ -88,7 +88,7 @@ contract ERC20Token {
         address _to,
         uint96 _value
     ) public returns (bool success) {
-        require(balanceOf(msg.sender) >= _value, "Insufficient Balance!");
+        require(_balanceOf[msg.sender] >= _value, "Insufficient Balance!");
         _balanceOf[_to] += _value;
         _balanceOf[msg.sender] -= _value;
 
