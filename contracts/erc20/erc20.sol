@@ -7,6 +7,8 @@ pragma solidity ^0.8.19;
 /// @dev by default it mints all the tokens to the deployer address.
 contract ERC20Token {
     uint96 private _totalSupply;
+    string private _symbol;
+    string private _name;
 
     /// @dev event emmited when a token is transfered
     /// @param _from Address from whom token is transfered.
@@ -33,7 +35,9 @@ contract ERC20Token {
     mapping(address => uint96) public _balanceOf;
 
     /// @dev constructor currently consist of minting logic.
-    constructor() {
+    constructor(string memory tokenName, string memory tokenSymbol) {
+        _name = tokenName;
+        _symbol = tokenSymbol;
         _mint(msg.sender, 1000);
     }
 
@@ -47,14 +51,14 @@ contract ERC20Token {
 
     /// @dev Name of token
     /// @return name string
-    function name() external pure returns (string memory) {
-        return "DIVYANSHU COIN";
+    function name() external view returns (string memory) {
+        return _name;
     }
 
     /// @dev Symbol of token
     /// @return symbol string
-    function symbol() external pure returns (string memory) {
-        return "DIV";
+    function symbol() external view returns (string memory) {
+        return _symbol;
     }
 
     /// @dev Allowed decimal places
